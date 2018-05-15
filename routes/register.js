@@ -22,15 +22,12 @@ router.post("/", function (req, res) {
     //Get/set all given(received) parameters
     let fName = req.body.firstname || null;
     let lName = req.body.lastname || null;
-    let email = String(req.body.email) || null;
+    let email = String(req.body.email) || null; //Casted to string because of regex check
     let pWord = req.body.password || null;
     //Check email with RFC5322 Official Standard regex, and check other parameters for not being null
     if (!String(email).match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) || fName == null || lName == null || pWord == null) {
         accept = false;
     }
-                                                                        // STILL HAVE TO ADD CHECK IF EMAIL ALREADY REGISTERED
-    console.log(fName + " " + lName + " " + email + " " + pWord);
-
     //If accept is true (nothing is wrong with given parameters)
     if (accept) {
         //Create connection configuration
@@ -50,7 +47,7 @@ router.post("/", function (req, res) {
 
             con.query(sql, function (err, result) {
                 if (err) throw err; //               Throw something as output too!!! (maybe only output)
-                if (result[0] != undefined) {
+                if (result === undefined || result[0] !== undefined) {
                     console.log("Email bestaat al");
                     res.status(412);
                     res.json({"message":"Er is al een account met dit email adres!","code":0,"datetime":dateTime.create().format('Y-m-d H:M:S')});
