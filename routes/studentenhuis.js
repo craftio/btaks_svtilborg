@@ -15,21 +15,21 @@ app.all(bodyParser.urlencoded({
 //Parse the next things to parse as json
 router.use(bodyParser.json());
 
-router.post("/", function (req, res) {
+//Create MySQL connection configuration
+const con = mysql.createConnection({
+    host: config.dbHost,
+    user: config.dbUser,
+    password: config.dbPass,
+    database: config.dbDatabase
+});
+
+router.post("/", function(req, res) {
 
     //Get/set all given(received) parameters
     let name = req.body.naam || null;
     let address = req.body.adres || null;
     //Get email from token
     let email = jwt.decode(req.header('X-Access-Token'), Buffer(config.secretKey)).sub;
-
-    //Create MySQL connection configuration
-    const con = mysql.createConnection({
-        host: config.dbHost,
-        user: config.dbUser,
-        password: config.dbPass,
-        database: config.dbDatabase
-    });
 
     //Create SQL Statement
     let sql = "SELECT ID, Voornaam FROM user WHERE Email = '" + email + "'";
@@ -66,20 +66,36 @@ router.post("/", function (req, res) {
     });
 });
 
-//     //If there IS something wrong with the parameters
-//     else {
-//         let message = "Oeps! Er is iets foutgegaan met de meegegeven waarden. Probeer het opnieuw!";
-//         if (fName == null || lName == null) {
-//             message = "Je bent je naam vergeten in te vullen!";
-//         } else if (!String(email).match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
-//             message = "Check je email!";
-//         } else if (pWord == null) {
-//             message = "Je hebt geen wachtwoord ingevuld!";
-//         }
-//         res.status(412); //Status 412 = one or more parameters of the request body are missing or faulty
-//         //Create error message JSON and send
-//         res.json({"message":message,"code":0,"datetime":dateTime.create().format('Y-m-d H:M:S')});
-//     }
-// });
+router.get("/:id?", function(req, res) {
+    const id  = req.params.id || '';
+
+    let query = "SELECT `studentenhuis`.`ID`, `studentenhuis`.`Naam`, `studentenhuis`.`Adres`, `user`.`Voornaam`, `user`.`Email`" +
+        "FROM `studentenhuis`" +
+        "JOIN `user`" +
+        "ON `user`.`ID` = `studentenhuis`.`userID`" +
+        "WHERE `studentenhuis`.`ID` = " + id;
+
+        con.query(query, function (err, result) {
+            console.log("test2");
+            if (err) throw err;
+            if (result !== undefined && result[0] !== undefined) {
+                result = result[0];
+                let recvID = result.ID;
+                let recvNaam = result.Naam;
+                let recvAdres = result.Adres;
+                let recvContact = result.Voornaam;
+                let recvEmail = result.Email;
+                res.status(200);
+                res.json({"ID" : recvID, "naam" : recvNaam, "adres" : recvAdres, "contact" : recvContact, "email" : recvEmail});
+            } else {
+                res.status(412);
+                res.json({
+                    "message": "Niet gevonden (huisId bestaat niet)",
+                    "code": 0,
+                    "datetime": dateTime.create().format('Y-m-d H:M:S')
+                });
+            }
+        })
+    });
 
 module.exports = router;

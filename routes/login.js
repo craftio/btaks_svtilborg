@@ -31,9 +31,6 @@ router.post("/", function (req, res) {
 
     let sql = "SELECT Password FROM user WHERE Email = '" + email + "'";
 
-    con.connect(function (err) {
-        if (err) throw err; //                  Throw something as output too!!! (maybe only output)
-
         con.query(sql, function (err, result) {
             if (err) throw err;
             if (result !== undefined && result[0] !== undefined && result[0].Password.toString() === pWord) {
@@ -47,8 +44,7 @@ router.post("/", function (req, res) {
                     "datetime": dateTime.create().format('Y-m-d H:M:S')
                 });
             }
-        })
-    })
-});
+        });
+    });
 
 module.exports = router;

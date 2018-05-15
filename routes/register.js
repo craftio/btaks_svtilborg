@@ -41,10 +41,7 @@ router.post("/", function (req, res) {
         //Create SQL Statement
         let sql = "SELECT Email FROM user WHERE Email = '" + email + "'";
 
-        //Create connection
-        con.connect(function(err) {
-            if (err) throw err; //                  Throw something as output too!!! (maybe only output)
-
+        //Execute query
             con.query(sql, function (err, result) {
                 if (err) throw err; //               Throw something as output too!!! (maybe only output)
                 if (result === undefined || result[0] !== undefined) {
@@ -63,7 +60,6 @@ router.post("/", function (req, res) {
                     });
                 }
             });
-        });
     }
 
     //If there IS something wrong with the parameters
