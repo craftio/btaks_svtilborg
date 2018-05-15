@@ -5,6 +5,8 @@ const express = require('express');
 const app = express();
 
 app.set('PORT', config.webPort);
+const port = process.env.PORT || app.get('PORT');
+
 app.set('SECRET_KEY', config.secretKey);
 
 //Catch all
@@ -17,7 +19,7 @@ app.use('/api/register', require('./routes/register'));
 app.use('/api/login', require('./routes/login'));
 //app.use('/api/studentenhuis')
 
-app.listen(config.webPort, function () {
+app.listen(port, function () {
     console.log("Server running on port" + config.webPort);
 });
 
