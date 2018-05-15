@@ -1,8 +1,11 @@
+const config = require('../config.json');
 const express = require('express');
 const app = express();
 const router = express.Router();
 const bodyParser = require("body-parser");
 const dateTime = require("node-datetime");
+const mysql = require('mysql');
+const auth =  require('../auth/authentication');
 
 //Parse 'extended: true' as url encoded text
 app.use(bodyParser.urlencoded({
@@ -30,9 +33,42 @@ router.post("/", function (req, res) {
 
     //If accept is true (nothing is wrong with given parameters)
     if (accept) {
-        res.status(200); //Status 200 = OK
-        //Create token and send
-        res.json({"token":"DIT WORD DE TOKEN","email":email});
+        //Create connection configuration
+        const con = mysql.createConnection({
+            host: config.dbHost,
+            user: config.dbUser,
+            password: config.dbPass,
+            database: config.dbDatabase
+        });
+
+        //Create SQL Statement
+        let sql = "SELECT Email FROM user WHERE Email = '" + email + "'";
+
+        //Create connection
+        con.connect(function(err) {
+            if (err) throw err; //                  Throw something as output too!!! (maybe only output)
+
+            con.query(sql, function (err, result) {
+                if (err) throw err; //               Throw something as output too!!! (maybe only output)
+                if (result[0] != undefined) {
+                    console.log("Email bestaat al");
+                    res.status(412);
+                    res.json({"message":"Er is al een account met dit email adres!","code":0,"datetime":dateTime.create().format('Y-m-d H:M:S')});
+                } else {
+                    con.query(sql, function (err) {
+                        if (err) throw err; //        Throw something as output too!!! (maybe only output)
+                        console.log("Connected!");
+                        sql = "INSERT INTO user (Voornaam, Achternaam, Email, Password) VALUES ('" + fName + "', '" + lName + "', '" + email + "', '" + pWord + "')";
+                        con.query(sql, function (err) {
+                            if (err) throw err;
+                            res.status(200); //Status 200 = OK
+                            //Create token and send
+                            res.json({"token":auth.encodeToken(email),"email":email});
+                        })
+                    });
+                }
+            });
+        });
     }
 
     //If there IS something wrong with the parameters

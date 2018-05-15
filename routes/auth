@@ -1,8 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/intel/:year?', function(req, res, next) {
+router.post('/register', function(req, res, next) {
+    console.log("Register requested in auth");
     return (0);
 });
+
+router.all('*', function(req, res) {
+    res.status(200);
+});
+
+module.exports = router;
 
 //IDK waarom dit niet werkt maar wou gewoon testen wat de functie in server deed
