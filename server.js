@@ -15,6 +15,7 @@ app.all('*', function(req, res, next) {
 
 app.use('/api/register', require('./routes/register'));
 app.use('/api/login', require('./routes/login'));
+//app.use('/api/studentenhuis')
 
 app.listen(config.webPort, function () {
     console.log("Server running on port" + config.webPort);
