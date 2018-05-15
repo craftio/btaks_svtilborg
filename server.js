@@ -10,12 +10,17 @@ const port = process.env.PORT || config.webPort;
 // Setup parser and faults.
 app.use(bodyParser.json());
 
-// API section.
-app.use('/api', require('./routes/api'));
-
 app.all('*', (req, res, next) => {
     console.log(req.method + " on " + req.url); // Stefan, moet je nog testen.
     next();                                     // Goto next
+});
+
+// API section.
+app.use('/api', require('./routes/api'));
+
+app.get('*', (req, res) => {
+    res.status(404);
+    res.send('404 - Not found');
 });
 
 // Setup port using port variable.
