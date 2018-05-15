@@ -1,26 +1,23 @@
-const config = require('./config.json');
-const express = require('express');
+const express       = require('express')
+const bodyParser    = require('body-parser')
+const config        = require('./config.json');
 
-//Create the application
+// Create the application
 const app = express();
+// Initialize port variable.
+const port = process.env.PORT || config.webPort;
 
-app.set('PORT', config.webPort);
-const port = process.env.PORT || app.get('PORT');
-
-app.set('SECRET_KEY', config.secretKey);
-
-//Catch all
-app.all('*', function(req, res, next) {
-    console.log( req.method + " on " + req.url); //IK WIL TESTEN WAT DIT DOET VOOR ACCURATE DESC MAAR KON NIET SNEL AUTH WERKEND KRIJGEN
-    next(); //Goto next
+// Setup parser and faults.
+app.use(bodyParser.json());
+app.all('*', (req, res, next) => {
+    console.log(req.method + " on " + req.url); // Stefan, moet je nog testen.
+    next();                                     // Goto next
 });
 
-app.use('/api/register', require('./routes/register'));
-app.use('/api/login', require('./routes/login'));
-//app.use('/api/studentenhuis')
+// API section.
+app.use('/api', require('./routes/api'));
 
-app.listen(port, function () {
-    console.log("Server running on port" + config.webPort);
+// Setup port using port variable.
+app.listen(port, () => {
+    console.log('De server luistert naar port ' + port);
 });
-
-module.exports = app;
