@@ -41,20 +41,15 @@ router.post("/", function (req, res) {
         //Create SQL Statement
         let sql = "SELECT Email FROM user WHERE Email = '" + email + "'";
 
-        //Create connection
-        con.connect(function(err) {
-            if (err) throw err; //                  Throw something as output too!!! (maybe only output)
-
+        //Execute query
             con.query(sql, function (err, result) {
                 if (err) throw err; //               Throw something as output too!!! (maybe only output)
                 if (result === undefined || result[0] !== undefined) {
-                    console.log("Email bestaat al");
                     res.status(412);
                     res.json({"message":"Er is al een account met dit email adres!","code":0,"datetime":dateTime.create().format('Y-m-d H:M:S')});
                 } else {
                     con.query(sql, function (err) {
                         if (err) throw err; //        Throw something as output too!!! (maybe only output)
-                        console.log("Connected!");
                         sql = "INSERT INTO user (Voornaam, Achternaam, Email, Password) VALUES ('" + fName + "', '" + lName + "', '" + email + "', '" + pWord + "')";
                         con.query(sql, function (err) {
                             if (err) throw err;
@@ -65,7 +60,6 @@ router.post("/", function (req, res) {
                     });
                 }
             });
-        });
     }
 
     //If there IS something wrong with the parameters

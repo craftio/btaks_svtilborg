@@ -7,6 +7,7 @@ const dateTime = require("node-datetime");
 const mysql = require('mysql');
 const auth =  require('../auth/authentication');
 
+
 //Parse 'extended: true' as url encoded text
 app.use(bodyParser.urlencoded({
     extended: true
@@ -30,17 +31,12 @@ router.post("/", function (req, res) {
 
     let sql = "SELECT Password FROM user WHERE Email = '" + email + "'";
 
-    con.connect(function (err) {
-        if (err) throw err; //                  Throw something as output too!!! (maybe only output)
-
         con.query(sql, function (err, result) {
             if (err) throw err;
             if (result !== undefined && result[0] !== undefined && result[0].Password.toString() === pWord) {
-                console.log("Password " + pWord + " matches email " + email);
                 res.status(200);
                 res.json({"token": auth.encodeToken(email), "email": email});
             } else {
-                console.log("Password " + pWord + " DOES NOT MATCH email " + email);
                 res.status(412);
                 res.json({
                     "message": "Email and Password combination is incorrect, try again!",
@@ -48,8 +44,7 @@ router.post("/", function (req, res) {
                     "datetime": dateTime.create().format('Y-m-d H:M:S')
                 });
             }
-        })
-    })
-});
+        });
+    });
 
 module.exports = router;
