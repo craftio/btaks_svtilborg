@@ -1,6 +1,7 @@
 const express       = require('express')
 const bodyParser    = require('body-parser')
 const config        = require('./config.json');
+const path          = require('path');
 
 // Create the application
 const app = express();
@@ -15,7 +16,7 @@ app.use('/api', require('./routes/api'));
 
 app.get('/', (req, res) => {
     res.status(200);
-    res.sendFile('frontend/index.html');
+    res.sendFile(path.join(__dirname + '/frontend/index.html'));
 });
 
 app.get('*', (req, res) => {

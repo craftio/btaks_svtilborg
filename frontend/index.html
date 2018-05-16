@@ -3,11 +3,19 @@
 </head>
 <body>
     <h1>Instructions for first time users:</h1>
-    <p>To view any information, add /api/register at the end of the link and do a POST request with first name\n
-        last name, email (has to be unique per account) and password for login.\n
-        Then change register to login in the url and do a POST request with email and password to get your API key.\n\n
-        Using your API key in the header, you can then start CRUD operations via POST, GET, PUT and DELETE requests.\n
-        It is advisable to use Postman for these operations, you can find Postman here: https://www.getpostman.com/
+    <p>To view any information, add /api/register at the end of the link and do a POST request with first name<br/>
+        last name, email (has to be unique per account) and password for login.<br/>
+        Then change register to login in the url and do a POST request with email and password to get your API key.<br/><br/>
+        Using your API key in the header, you can then start CRUD operations via POST, GET, PUT and DELETE requests.<br/>
+        It is advisable to use Postman for these operations, you can find Postman here: https://www.getpostman.com/<br/><br/>
+
+        <b>Here are some of inputs for the api:</b><br/>
+        <i>
+            To get all the studentenhuizen: /api/studentenhuis<br/>
+            To get a specific studentenhuis by id: /api/studentenhuis/:id (e.g. /api/studentenhuis/1)<br/>
+            To get a more specific piece of data such as a deelnemer to a specific maaltijd from a specific studentenhuis: /api/studentenhuis/:id/maaltijd/:id/deelnemers
+        </i>
+
     </p>
 </body>
 </html>
