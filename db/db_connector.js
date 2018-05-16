@@ -2,10 +2,10 @@ const mysql = require('mysql');
 const config = require('../config');
 
 let db = mysql.createConnection( {
-    host            : config.dbHost,
-    user            : config.dbUser,
-    password        : config.dbPassword,
-    database        : config.dbDatabase,
+    host            : process.env.DB_HOST       || config.dbHost,
+    user            : process.env.DB_USER       || config.dbUser,
+    password        : process.env.DB_PASSWORD   || config.dbPassword,
+    database        : process.env.DB_DATABASE   || config.dbDatabase,
 });
 
 //console.log(db.host);

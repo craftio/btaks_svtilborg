@@ -12,19 +12,31 @@ module.exports = {
         const name = req.body.naam;
         const adres = req.body.adres;
         var token = (req.header('X-Access-Token')) || '';
-
         auth.decodeToken(token, (err, payload) => {
             const query = {
-                sql: "INSERT INTO studentenhuis(Naam, Adres, UserID) VALUES ('" + name + "', '" + adres + "','" + payload.id + "')",
+                sql: 'INSERT INTO studentenhuis(Naam, Adres, UserID) VALUES (?, ?, ?)',
+                values: [name, adres, payload.id],
                 timeout: 2000
             };
             console.log(payload);
             console.log('QUERY: ' + query.sql);
-            db.query( query, (error, rows) => {
+            db.query(query, (error, rows, fields) => {
                 if (error) {
                     res.status(412).json({"message":"Een of meer properties in de request body ontbreken of zijn foutief","code":0,"datetime":dateTime.create().format('Y-m-d H:M:S')});
                 } else {
                     res.status(200).json({"ID":rows.insertId,"naam":name,"adres":adres,"contact":payload.id,"email":payload.email});
+                    // const giveContactQuery = {
+                    //     sql: 'SELECT ID, Voornaam, Achternaam, Email FROM user WHERE ID = ' + payload.id,
+                    //     timeout: 2000
+                    // };
+                    // db.query(giveContactQuery, (error, rows, fields) => {
+                    //     if (error) {
+                    //         res.status(500).json(error.toString());
+                    //     } else {
+                    //         res.status(200);
+                    //         res.send(rows);
+                    //     }
+                    // });
                 }
             });
         });
@@ -46,8 +58,7 @@ module.exports = {
     getStudentenhuis(req, res, next)
     {
         const id = req.params.id || '';
-        if (id)
-        {
+        if (id) {
             const query = {
                 sql: 'SELECT * FROM view_studentenhuis WHERE ID = ?',
                 values: id,
@@ -177,4 +188,4 @@ module.exports = {
                 }
             });
     }
-}
+};

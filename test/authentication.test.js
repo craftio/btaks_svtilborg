@@ -1,16 +1,16 @@
 /**
  * Testcases aimed at testing the authentication process.
  */
-const chai = require('chai')
-const chaiHttp = require('chai-http')
-const server = require('../server')
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../server');
 
-chai.should()
-chai.use(chaiHttp)
+chai.should();
+chai.use(chaiHttp);
 
 // After successful registration we have a valid token. We export this token
 // for usage in other testcases that require login.
-let validToken
+let validToken;
 
 describe('Registration', () => {
     it('should return a token when providing valid information', (done) => {
@@ -164,11 +164,9 @@ describe('Registration', () => {
             });
         done();
     });
-
 });
 
 describe('Login', () => {
-
     it('should return a token when providing valid information', (done) => {
         //
         // Hier schrijf je jouw testcase.

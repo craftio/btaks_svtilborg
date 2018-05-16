@@ -1,0 +1,18 @@
+<html>
+<head>
+</head>
+<body>
+    <h1>Instructions for first time users:</h1>
+    <p>To view any information, add /api/register at the end of the link and do a POST request with first name<br/>
+        last name, email (has to be unique per account) and password for login.<br/>
+        Then change register to login in the url and do a POST request with email and password to get your API key.<br/><br/>
+        Using your API key in the header, you can then start CRUD operations via POST, GET, PUT and DELETE requests.<br/>
+        It is advisable to use Postman for these operations, you can find Postman here: <a href="https://www.getpostman.com/">https://www.getpostman.com/</a><br/><br/>
+
+        <b>Here are some of inputs for the api:</b><br/>
+        <i>To get all the studentenhuizen:</i> /api/studentenhuis<br/>
+        <i>To get a specific studentenhuis by id:</i> /api/studentenhuis/:id (e.g. /api/studentenhuis/1)<br/>
+        <i>To get a more specific piece of data such as a deelnemer to a specific maaltijd from a specific studentenhuis:</i> /api/studentenhuis/:id/maaltijd/:id/deelnemers
+    </p>
+</body>
+</html>
