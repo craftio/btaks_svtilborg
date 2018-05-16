@@ -23,7 +23,7 @@ module.exports = {
                     res.status(500).json(error.toString());
                 } else {
                     const giveContactQuery = {
-                        sql: 'SELECT ID FROM user WHERE ID = ' + payload.id,
+                        sql: 'SELECT ID, Voornaam, Achternaam, Email FROM user WHERE ID = ' + payload.id,
                         timeout: 2000
                     };
                     db.query(giveContactQuery, (error, rows, fields) => {
