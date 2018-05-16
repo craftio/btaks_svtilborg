@@ -46,7 +46,7 @@ router.post("/", function (req, res) {
                 if (err) throw err; //               Throw something as output too!!! (maybe only output)
                 if (result === undefined || result[0] !== undefined) {
                     res.status(412);
-                    res.json({"message":"Er is al een account met dit email adres!","code":0,"datetime":dateTime.create().format('Y-m-d H:M:S')});
+                    res.json({"message":"Er bestaat al een account met dit email adres","code":0,"datetime":dateTime.create().format('Y-m-d H:M:S')});
                 } else {
                     con.query(sql, function (err) {
                         if (err) throw err; //        Throw something as output too!!! (maybe only output)
@@ -64,17 +64,11 @@ router.post("/", function (req, res) {
 
     //If there IS something wrong with the parameters
     else {
-        let message = "Oeps! Er is iets foutgegaan met de meegegeven waarden. Probeer het opnieuw!";
-        if (fName == null || lName == null) {
-            message = "Je bent je naam vergeten in te vullen!";
-        } else if (!String(email).match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
-            message = "Check je email!";
-        } else if (pWord == null) {
-            message = "Je hebt geen wachtwoord ingevuld!";
+        if (fName == null || lName == null || pWord == null || !String(email).match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+            res.status(412); //Status 412 = one or more parameters of the request body are missing or faulty
+            //Create error message JSON and send
+            res.json({"message":"Een of meer properties in de request body ontbreken of zijn foutief","code":0,"datetime":dateTime.create().format('Y-m-d H:M:S')});
         }
-        res.status(412); //Status 412 = one or more parameters of the request body are missing or faulty
-        //Create error message JSON and send
-        res.json({"message":message,"code":0,"datetime":dateTime.create().format('Y-m-d H:M:S')});
     }
 });
 

@@ -39,7 +39,7 @@ router.post("/", function (req, res) {
             } else {
                 res.status(412);
                 res.json({
-                    "message": "Email and Password combination is incorrect, try again!",
+                    "message": "Een of meer properties in de request body ontbreken of zijn foutief",
                     "code": 0,
                     "datetime": dateTime.create().format('Y-m-d H:M:S')
                 });
