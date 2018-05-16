@@ -7,10 +7,10 @@ let maaltijdControl = require('../controllers/maaltijd_control');
 let deelnemerControl = require('../controllers/deelnemer_control');
 
 // Token validation
-routes.all(new RegExp("[^(\/loginrgste)]"), (req, res, next) => {
+routes.all(new RegExp("[^(\/loginrste)]"), (req, res, next) => {
     console.log("Token valideren...");
-    var token = (req.header('X-Access-Token')) || '';
-    auth.decodeToken(token, (err, payload) => {
+    let token = (req.header('X-Access-Token')) || '';
+    auth.decodeToken(token, (err) => {
         if (err) {
             console.log("Error handler: " + err.message);
             res.status((err.status || 401 )).json({error: new Error("Ongeldige token.").message});
