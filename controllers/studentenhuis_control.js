@@ -18,11 +18,22 @@ module.exports = {
             };
             console.log(payload);
             console.log('QUERY: ' + query.sql);
-            db.query( query, (error, rows, fields) => {
+            db.query(query, (error, rows, fields) => {
                 if (error) {
-                    res.status(500).json(error.toString())
+                    res.status(500).json(error.toString());
                 } else {
-                    res.status(200).json(rows)
+                    const giveContactQuery = {
+                        sql: 'SELECT ID FROM user WHERE ID = ' + payload.id,
+                        timeout: 2000
+                    };
+                    db.query(giveContactQuery, (error, rows, fields) => {
+                        if (error) {
+                            res.status(500).json(error.toString());
+                        } else {
+                            res.status(200);
+                            res.send(rows);
+                        }
+                    });
                 }
             });
         });
