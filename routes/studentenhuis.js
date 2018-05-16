@@ -190,4 +190,52 @@ router.put("/:id?", function(req, res) {
         });
     });
 
+router.delete("/:id?", function(req, res) {
+    const id  = req.params.id || '';
+    if (id === '') {
+        res.status(412);
+        res.json({
+            "message": "Een of meer properties in de request body ontbreken of zijn foutief",
+                "code": 0,
+                "datetime": dateTime.create().format('Y-m-d H:M:S')
+        })
+    } else {
+        let query = "SELECT `user`.`Email`" +
+            "FROM `studentenhuis`" +
+            "JOIN `user`" +
+            "ON `user`.`ID` = `studentenhuis`.`userID`" +
+            "WHERE `studentenhuis`.`ID` = " + id;
+
+        let email = jwt.decode(req.header('X-Access-Token'), Buffer(config.secretKey)).sub;
+
+        con.query(query, function (err, result) {
+            if (err) throw err;
+            if (result === undefined || result[0] === undefined) {
+                res.status(409);
+                res.json({
+                    "message": "Conflict (Gebruiker mag deze data niet verwijderen)",
+                    "code": 0,
+                    "datetime": dateTime.create().format('Y-m-d H:M:S')
+                });
+            } else {
+                let query = "DELETE FROM studentenhuis" +
+                    "WHERE ID = " + id;
+
+                con.query(query, function (err, result) {
+                    if (err) throw err;
+                    res.status(200);
+                    res.json({
+                        "message": "Studentenhuis is succesvol verwijderd",
+                        "code": 200,
+                        "datetime": dateTime.create().format('Y-m-d H:M:S')
+                    });
+                });
+            }
+        });
+
+    }
+
+
+});
+
 module.exports = router;
