@@ -5,18 +5,23 @@ let gebruikerControl = require('../controllers/gebruiker_control');
 let studentenhuisControl = require('../controllers/studentenhuis_control');
 let maaltijdControl = require('../controllers/maaltijd_control');
 let deelnemerControl = require('../controllers/deelnemer_control');
+
+// Token validation
 routes.all(new RegExp("[^(\/loginrgste)]"), (req, res, next) => {
-    console.log("VALIDEER TOKEN");
+    console.log("Token valideren...");
     var token = (req.header('X-Access-Token')) || '';
     auth.decodeToken(token, (err, payload) => {
         if (err) {
-            console.log('Error handler: ' + err.message);
+            console.log("Error handler: " + err.message);
             res.status((err.status || 401 )).json({error: new Error("Ongeldige token.").message});
         } else {
+            console.log("Token gevalideerd!");
             next();
         }
     });
 });
+
+// Swagger routes
 routes.route('/login').post(gebruikerControl.LoginUser);
 routes.route('/register').post(gebruikerControl.registerUser);
 routes.post('/studentenhuis',studentenhuisControl.createStudentenhuis);

@@ -11,8 +11,7 @@ const port = process.env.PORT || config.webPort;
 app.use(bodyParser.json());
 
 app.all('*', (req, res, next) => {
-    console.log(req.method + " on " + req.url); // Stefan, moet je nog testen.
-    next();                                     // Goto next
+    next();
 });
 
 // API section.
@@ -27,3 +26,5 @@ app.get('*', (req, res) => {
 app.listen(port, () => {
     console.log('De server luistert naar port ' + port);
 });
+
+module.exports = app;

@@ -4,32 +4,38 @@ const db = require('../db/db_connector')
 const auth =  require('../auth/authentication');
 
 module.exports = {
-    registerUser(req,res,next){
-        let user = req.body;
-
-        assert.equal(typeof(req.body.firstname), 'string', "Argument 'firstname' must be a string.");
-        assert.equal(typeof(req.body.lastname), 'string', "Argument 'lastname' must be a string.");
-        assert.equal(typeof(req.body.email), 'string', "Argument 'email' must be a string.");
-        assert.equal(typeof(req.body.password), 'string', "Argument 'password' must be a string.");
-
-        const query = {
-            sql: 'INSERT INTO user(Voornaam, Achternaam,Email,Password) VALUES (?, ?,?,?)',
-            values: [user.firstname, user.lastname,user.email,user.password ],
+    registerUser(req, res, next){
+        let user = new User(req.body.firstname, req.body.lastname, req.body.email, req.body.password);
+        const checkQuery = {
+            sql: 'SELECT * FROM user WHERE `Email` = "' + user.email + '"',
             timeout: 2000
         };
-
-        console.log('QUERY: ' + query.sql);
-
-        db.query( query, (error, rows, fields) => {
+        db.query(checkQuery, (error, rows, fields) => {
             if (error) {
                 res.status(500).json(error.toString());
             } else {
-                res.status(200).json(rows);
-
+                if (!rows.length > 0) {
+                    const query = {
+                        sql: 'INSERT INTO user(Voornaam, Achternaam, Email, Password) VALUES (?, ?, ?, ?)',
+                        values: [user.firstname, user.lastname, user.email, user.password],
+                        timeout: 2000
+                    };
+                    console.log('QUERY: ' + query.sql);
+                    db.query(query, (error, rows, fields) => {
+                        if (error) {
+                            res.status(500).json(error.toString());
+                        } else {
+                            res.status(200).json(rows);
+                        }
+                    });
+                } else {
+                    res.send('There is already a user registered via that email address.');
+                    res.status(412);
+                }
             }
         });
     },
-    LoginUser(req,res,next){
+    LoginUser(req, res, next){
         assert.equal(typeof(req.body.email), 'string', "Argument 'email' must be a string.");
         assert.equal(typeof(req.body.password), 'string', "Argument 'password' must be a string.");
         var email = req.body.email || '';
@@ -45,9 +51,9 @@ module.exports = {
                 res.status(500).json(error.toString());
             }
             else{
-                if(rows.length =1){
+                if(rows.length = 1){
                     res.send({
-                        "token": auth.encodeToken(rows[0].ID,email),
+                        "token": auth.encodeToken(rows[0].ID, email),
                         "email": email,
                     });
                 }
@@ -58,8 +64,6 @@ module.exports = {
                     });
                 }
             }
-
         });
-
     }
-}
+};

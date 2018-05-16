@@ -8,14 +8,14 @@ let db = mysql.createConnection( {
     database        : config.dbDatabase,
 });
 
-console.log(db.host);
+//console.log(db.host);
 
 db.connect( (error) => {
     if(error) {
         console.log(error);
         return;
     } else {
-        console.log("Connected to " + config.dbHost + ':' + config.dbDatabase);
+        console.log("Connected to databasehost " + config.dbHost + ' for database ' + config.dbDatabase);
     }
 });
 

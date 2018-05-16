@@ -1,9 +1,7 @@
 class Studentenhuis{
-    constructor(id,naam,adres,contact,email){
+    constructor(naam, adres){
         this.naam = naam;
         this.adres = adres;
-        this.contact = contact;
-        this.email = email;
     }
 }
 module.exports = Studentenhuis;
