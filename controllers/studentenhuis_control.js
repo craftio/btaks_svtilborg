@@ -10,13 +10,13 @@ module.exports = {
         const name = req.body.naam;
         const adres = req.body.adres;
         var token = (req.header('X-Access-Token')) || '';
-
         auth.decodeToken(token, (err, payload) => {
             const query = {
-                sql: 'INSERT INTO studentenhuis(Naam, Adres, UserID) VALUES (?, ?,?)',
+                sql: 'INSERT INTO studentenhuis(Naam, Adres, UserID) VALUES (?, ?, ?)',
                 values: [name, adres, payload.id],
                 timeout: 2000
             };
+            console.log(payload);
             console.log('QUERY: ' + query.sql);
             db.query( query, (error, rows, fields) => {
                 if (error) {
@@ -44,8 +44,7 @@ module.exports = {
     getStudentenhuis(req, res, next)
     {
         const id = req.params.id || '';
-        if (id)
-        {
+        if (id) {
             const query = {
                 sql: 'SELECT * FROM view_studentenhuis WHERE ID = ?',
                 values: id,
@@ -54,9 +53,9 @@ module.exports = {
             console.log('QUERY: ' + query.sql);
             db.query( query, (error, rows, fields) => {
                 if (error) {
-                    res.status(500).json(error.toString())
+                    res.status(500).json(error.toString());
                 } else {
-                    res.status(200).json(rows)
+                    res.status(200).json(rows);
                 }
             });
         }
