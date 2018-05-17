@@ -30,6 +30,7 @@ describe('Registration', () => {
                 res.body.should.have.property('token').which.is.a('string');
                 res.body.should.have.property('email').which.is.a('string');
                 validToken = res.body.token;
+                done();
             });
             module.exports = {
                 token: validToken
@@ -41,7 +42,6 @@ describe('Registration', () => {
         // module.exports = {
         //     token: validToken
         // }
-        done();
     });
 
     it('should return an error on GET request', (done) => {
@@ -52,8 +52,8 @@ describe('Registration', () => {
             .get('/api/register')
             .end((err, res) => {
                 res.should.have.status(404);
+                done();
             });
-        done();
     });
 
     it('should throw an error when the user already exists', (done) => {
@@ -71,8 +71,8 @@ describe('Registration', () => {
             .end((err, res) => {
                 // No idea why an | Uncaught AssertionError: expected {} to have property 'token' | pops up here...
                 res.should.have.status(412);
+                done();
             });
-        done();
     });
 
     it('should throw an error when no firstname is provided', (done) => {
@@ -107,8 +107,8 @@ describe('Registration', () => {
             })
             .end((err, res) => {
                 res.should.have.status(412);
+                done();
             });
-        done();
     });
 
     it('should throw an error when no lastname is provided', (done) => {
